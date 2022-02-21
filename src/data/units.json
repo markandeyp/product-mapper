@@ -1,0 +1,35 @@
+[
+  { "name": "oz", "aka": ["oz", "ounce", "oz.", "ownse", "ounces", "ownses"] },
+  {
+    "name": "floz",
+    "aka": [
+      "floz",
+      "fl oz",
+      "fl. oz.",
+      "fl oz.",
+      "fluid oz.",
+      "fluid ounce",
+      "fl ounces",
+      "fl. ounce"
+    ]
+  },
+  { "name": "tbsp", "aka": ["tablespoon", "tablespoons", "tb", "Tbs", "tbsp"] },
+  { "name": "tsp", "aka": ["teaspoon", "teaspoons", "ts", "tsp"] },
+  { "name": "pounds", "aka": ["lb", "lb.", "lbs", "pound", "pounds"] },
+  {
+    "name": "each",
+    "aka": [
+      "each",
+      "ea",
+      "large",
+      "medium",
+      "small",
+      "lg",
+      "md",
+      "sm",
+      "eaches",
+      "x"
+    ]
+  },
+  { "name": "cup", "aka": ["c", "cp", "cup", "cups"] }
+]

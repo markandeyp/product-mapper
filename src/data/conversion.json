@@ -1,0 +1,17 @@
+[
+  {
+    "from": "oz",
+    "to": "gm",
+    "rate": 28.35
+  },
+  {
+    "from": "pounds",
+    "to": "gm",
+    "rate": 453.59
+  },
+  {
+    "from": "floz",
+    "to": "ml",
+    "rate": 29.57
+  }
+]
