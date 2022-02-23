@@ -6,4 +6,5 @@ export default interface Product {
   size: string;
   unit: string;
   convertedSize?: number;
+  sizeInGram?: number;
 }

@@ -22,30 +22,45 @@ export default class MappingService {
         walmartProducts = walmartProducts.filter(
           (p) => p.size && p.size.length > 0 && p.unit && p.unit.length > 0
         );
+
+        const userStandardUnit = this.getStandardisedUnit(unit);
+        let userQuantityInGram = this.convertIntoGram(size, userStandardUnit);
+
+        if (!userQuantityInGram && mappings[0].WeightPerUnit_g) {
+          userQuantityInGram = size * Number(mappings[0].WeightPerUnit_g);
+        }
+
         walmartProducts.forEach((wp) => {
           const [wpSize, wpUnit] = this.getSizeAndUnit(wp.size);
-
           const standardUnit = this.getStandardisedUnit(wpUnit || wp.unit);
+          const sizeInGram = this.convertIntoGram(wpSize, standardUnit);
 
-          if (unit !== standardUnit) {
-            const conversionRate = this.conversionData.find(
-              (cd) => cd.from === standardUnit && cd.to === unit
-            );
-            if (conversionRate) {
-              const convertedSize = wpSize * conversionRate.rate;
-              wp.convertedSize = convertedSize;
-            }
-          } else {
-            wp.convertedSize = wpSize;
+          if (sizeInGram) {
+            wp.sizeInGram = sizeInGram;
+          } else if (mappings[0].WeightPerUnit_g) {
+            wp.sizeInGram = wpSize * Number(mappings[0].WeightPerUnit_g);
           }
         });
 
-        const sizeMatchedProducts = walmartProducts
-          .filter((wp) => wp.convertedSize >= size)
-          .sort((a, b) => +a.convertedSize - b.convertedSize)
-          .sort((a, b) => +a.salePrice - +b.salePrice);
+        const sizeMatchedProducts = walmartProducts.filter(
+          (wp) => wp.sizeInGram >= userQuantityInGram
+        );
 
-        return sizeMatchedProducts;
+        const notEnoughQuantityArray = walmartProducts.filter(
+          (wp) => wp.sizeInGram < userQuantityInGram
+        );
+
+        notEnoughQuantityArray.forEach((element) => {
+          let qtToBeAdded = Math.ceil(userQuantityInGram / element.sizeInGram);
+          element.salePrice = "" + Number(element.salePrice) * qtToBeAdded;
+          element.sizeInGram = Number(element.sizeInGram) * qtToBeAdded;
+        });
+
+        sizeMatchedProducts.concat(notEnoughQuantityArray);
+
+        sizeMatchedProducts.sort((a, b) => +a.salePrice - +b.salePrice);
+
+        return sizeMatchedProducts[0];
       }
       return walmartProducts;
     } else {
@@ -97,12 +112,21 @@ export default class MappingService {
   }
 
   private getSizeAndUnit(wpSize: string): [size: number, unit?: string] {
-    const regex = new RegExp(/([0-9]+)([a-zA-z\s]+)*/);
+    const regex = new RegExp(/([0-9.\/]+)([a-zA-z\s]+)*/);
     const matches = regex.exec(wpSize);
     if (matches && matches.length > 0) {
       return [+matches[1], matches[2] ? matches[2].trim() : null];
     } else {
       return [parseFloat(wpSize)];
     }
+  }
+
+  private convertIntoGram(wpSize: number, wpUnit: string) {
+    const conversionRate = this.conversionData.find((cd) => {
+      return cd.from === wpUnit;
+    });
+    if (conversionRate && conversionRate.rate) {
+      return wpSize * conversionRate.rate;
+    } else return null;
   }
 }

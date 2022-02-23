@@ -4,4 +4,5 @@ export default interface Mapping {
   query: string;
   productId?: string;
   salePrice?: string;
+  WeightPerUnit_g?: string;
 }

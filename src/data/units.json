@@ -1,5 +1,8 @@
 [
-  { "name": "oz", "aka": ["oz", "ounce", "oz.", "ownse", "ounces", "ownses"] },
+  {
+    "name": "ounce",
+    "aka": ["oz", "ounce", "oz.", "ownse", "ounces", "ownses"]
+  },
   {
     "name": "floz",
     "aka": [
@@ -31,5 +34,17 @@
       "x"
     ]
   },
-  { "name": "cup", "aka": ["c", "cp", "cup", "cups"] }
+  { "name": "cup", "aka": ["c", "cp", "cup", "cups", "tin"] },
+  {
+    "name": "kg",
+    "aka": ["kg", "kilogram", "kilograms", "kgs", "kilogramme", "kilogrammes"]
+  },
+  {
+    "name": "gm",
+    "aka": ["gm", "gram", "grams", "gms", "gramme", "grammes"]
+  },
+  {
+    "name": "ml",
+    "aka": ["ml", "mls", "Milliliter", "Milliliters"]
+  }
 ]

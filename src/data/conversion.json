@@ -1,6 +1,6 @@
 [
   {
-    "from": "oz",
+    "from": "ounce",
     "to": "gm",
     "rate": 28.35
   },
@@ -11,7 +11,37 @@
   },
   {
     "from": "floz",
-    "to": "ml",
+    "to": "gm",
     "rate": 29.57
+  },
+  {
+    "from": "kg",
+    "to": "gm",
+    "rate": 1000
+  },
+  {
+    "from": "cup",
+    "to": "gm",
+    "rate": 250
+  },
+  {
+    "from": "tsp",
+    "to": "gm",
+    "rate": 4.2
+  },
+  {
+    "from": "tbsp",
+    "to": "gm",
+    "rate": 15
+  },
+  {
+    "from": "ml",
+    "to": "gm",
+    "rate": 1
+  },
+  {
+    "from": "each",
+    "to": "gm",
+    "rate": null
   }
 ]
