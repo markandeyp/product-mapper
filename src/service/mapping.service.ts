@@ -70,7 +70,7 @@ export default class MappingService {
 
   private async getMapping(ingredient: string): Promise<Mapping[]> {
     try {
-      const query = `SELECT TOP 1 Name, NameKey, Query FROM [dbo].[IngredientProductMapping] WHERE Name = '${ingredient}' OR NameKey = '${ingredient}' AND Query IS NOT NULL`;
+      const query = `SELECT TOP 1 Name, NameKey, Query FROM [dbo].[RecipeIngredientsMapping] WHERE Name = '${ingredient}' OR NameKey = '${ingredient}' AND Query IS NOT NULL`;
       const dbService = new DBService(DBConfig);
       const connected = await dbService.connect();
       if (connected) {
