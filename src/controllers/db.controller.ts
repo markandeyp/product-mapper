@@ -12,7 +12,7 @@ export async function DBController(_: Request, res: Response) {
     if (connected) {
       const type: Product = getProductType();
       const results = await dbService.query(
-        "SELECT top 10 * FROM Products",
+        "SELECT top 10 * FROM WalmartProduct",
         type
       );
       res.status(200).send({ status: "success", results });
