@@ -14,7 +14,11 @@ export default class MappingService {
     rate: number;
   }[] = conversion;
 
-  async getProductMapping(ingredient: string, size: number, unit: string) {
+  async getProductMapping(
+    ingredient: string,
+    size: number,
+    unit: string
+  ): Promise<Product> {
     const mappings = await this.getMapping(ingredient);
     if (mappings && mappings.length) {
       let walmartProducts = await this.getWalmartProducts(mappings[0].query);
@@ -62,7 +66,7 @@ export default class MappingService {
 
         return sizeMatchedProducts[0];
       }
-      return walmartProducts;
+      return walmartProducts && walmartProducts[0];
     } else {
       return; // admin notification
     }

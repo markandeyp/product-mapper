@@ -1,11 +1,14 @@
 import DBDetails from "../models/DBDetails";
-import { Connection, ConnectionConfig, Request } from "tedious";
+import { Connection, ConnectionConfig, Request, TYPES } from "tedious";
+import { table } from "console";
 
 export default class DBService {
   config: ConnectionConfig = {
     options: {
       rowCollectionOnDone: true,
       camelCaseColumns: true,
+      requestTimeout: 60 * 1000,
+      connectTimeout: 60 * 1000,
     },
     authentication: {
       type: "default",
@@ -44,12 +47,18 @@ export default class DBService {
     }
   }
 
+  execute(request: Request) {
+    this.connection.execSql(request);
+  }
+
   query(sql: string, type: any): Promise<any[]> {
     return new Promise((resolve, reject) => {
       const request = new Request(sql, (err) => {
         if (err) {
           reject(err);
         }
+
+        this.connection.close();
       });
 
       const rows: typeof type[] = [];
