@@ -30,7 +30,7 @@ export default class BatchService {
         ingToMap.metricUnit
       );
       if (mapping) {
-        const mappingData = {
+        let mappingData = {
           ingredientId: ingToMap.ingredientId,
           recipeId: ingToMap.recipeId,
           productId: mapping.productId,
@@ -50,6 +50,18 @@ export default class BatchService {
         } catch (err) {
           console.log(
             "Error while updating/inserting mapping in database",
+            err
+          );
+        }
+      } else {
+        try {
+          this.updateMappingUpdateTime(
+            ingToMap.ingredientId,
+            ingToMap.recipeId
+          );
+        } catch (err) {
+          console.log(
+            "Error while updating mapping timestamp in database",
             err
           );
         }
@@ -84,7 +96,7 @@ export default class BatchService {
       if (connected) {
         const type: Ingredient = getIngredientType();
         const results = await dbService.query(
-          `SELECT TOP ${batchSize} i.RecipeId, i.IngredientId, i.Name, i.MetricQuantity, i.MetricUnit, CAST(1 AS BIT) AS [Exists] FROM [dbo].[Ingredients] i JOIN [dbo].[IngredientProductMapping] ipm ON i.RecipeId = ipm.RecipeId AND i.IngredientId = ipm.IngredientId WHERE DATEDIFF(day, ipm.UpdtaedOnUtc, GETDATE()) > 5;`,
+          `SELECT TOP ${batchSize} i.RecipeId, i.IngredientId, i.Name, i.MetricQuantity, i.MetricUnit, CAST(1 AS BIT) AS [Exists] FROM [dbo].[Ingredients] i JOIN [dbo].[IngredientProductMapping] ipm ON i.RecipeId = ipm.RecipeId AND i.IngredientId = ipm.IngredientId WHERE DATEDIFF(day, ipm.UpdtaedOnUtc, GETDATE()) > 1;`,
           type
         );
         return results;
@@ -167,6 +179,41 @@ export default class BatchService {
         request.addParameter("itemId", TYPES.NVarChar, mapping.itemId);
         request.addParameter("offerId", TYPES.NVarChar, mapping.offerId);
         request.addParameter("price", TYPES.Decimal, mapping.price);
+        request.addParameter("updtaedOnUtc", TYPES.DateTime2, timestamp);
+
+        dbService.execute(request);
+      }
+    } catch (err) {
+      console.log("Error while updating product mappings", err);
+      return;
+    }
+  }
+
+  private async updateMappingUpdateTime(
+    ingredientId: number,
+    recipeId: number
+  ) {
+    try {
+      const dbService = new DBService(DBConfig);
+      const connected = await dbService.connect();
+      if (connected) {
+        const sql = `UPDATE IngredientProductMapping SET UpdtaedOnUtc = @updtaedOnUtc WHERE RecipeId = @recipeId AND IngredientId = @ingredientId`;
+
+        const request = new Request(sql, (err, rowCount) => {
+          if (err) {
+            throw err;
+          }
+        });
+
+        request.on("requestCompleted", () => {
+          dbService.disconnect();
+          return true;
+        });
+
+        const timestamp = new Date().toUTCString();
+
+        request.addParameter("recipeId", TYPES.BigInt, recipeId);
+        request.addParameter("ingredientId", TYPES.BigInt, ingredientId);
         request.addParameter("updtaedOnUtc", TYPES.DateTime2, timestamp);
 
         dbService.execute(request);
