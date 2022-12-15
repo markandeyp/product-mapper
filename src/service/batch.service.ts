@@ -22,8 +22,7 @@ export default class BatchService {
       }
     }
 
-    for (let i = 0; i < ingredientsToMap.length; i++) {
-      const ingToMap = ingredientsToMap[i];
+    for (const ingToMap of ingredientsToMap) {
       ingToMap.name = ingToMap.name ? ingToMap.name.trim() : ingToMap.name;
       const mapping = await this.mappingService.getProductMapping(
         ingToMap.name.trim(),
