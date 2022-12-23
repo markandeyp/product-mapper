@@ -66,7 +66,7 @@ export default class BatchService {
                 productId: null,
                 offerId: null,
                 itemId: null,
-                price: null,
+                price: 0,
                 quantity: ingToMap.metricQuantity,
                 exists: ingToMap.exists,
               });
