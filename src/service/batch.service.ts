@@ -55,10 +55,21 @@ export default class BatchService {
         }
       } else {
         try {
-          this.updateMappingUpdateTime(
-            ingToMap.ingredientId,
-            ingToMap.recipeId
-          );
+          ingToMap.exists
+            ? this.updateMappingUpdateTime(
+                ingToMap.ingredientId,
+                ingToMap.recipeId
+              )
+            : this.insertMapping({
+                ingredientId: ingToMap.ingredientId,
+                recipeId: ingToMap.recipeId,
+                productId: null,
+                offerId: null,
+                itemId: null,
+                price: null,
+                quantity: ingToMap.metricQuantity,
+                exists: ingToMap.exists,
+              });
         } catch (err) {
           console.log(
             "Error while updating mapping timestamp in database",
